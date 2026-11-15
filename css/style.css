@@ -702,6 +702,17 @@ p + p {
   font-weight: 600;
 }
 
+.contacts__messengers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.contacts__messengers .btn {
+  padding: 0.65rem 1rem;
+  font-size: var(--fs-small);
+}
+
 .contacts__link {
   text-decoration: none;
   white-space: nowrap;
