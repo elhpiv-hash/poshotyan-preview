@@ -725,7 +725,7 @@ p + p {
 .reviews-widget {
   position: relative;
   width: 100%;
-  max-width: 35rem;
+  max-width: 760px;
   height: 40rem;
   overflow: hidden;
   border: 1px solid var(--line);
