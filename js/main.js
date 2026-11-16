@@ -70,6 +70,18 @@
     });
   }
 
+  // Раскрывающиеся ответы в разделе FAQ.
+  document.documentElement.classList.add('js');
+  document.querySelectorAll('.acc__head').forEach(function (head) {
+    var panel = document.getElementById(head.getAttribute('aria-controls'));
+    if (!panel) return;
+    head.addEventListener('click', function () {
+      var open = head.getAttribute('aria-expanded') === 'true';
+      head.setAttribute('aria-expanded', String(!open));
+      panel.classList.toggle('is-open', !open);
+    });
+  });
+
   // Крупный просмотр грамот
   var box = document.getElementById('lightbox');
   if (box && typeof box.showModal === 'function') {
