@@ -1051,14 +1051,6 @@ p + p {
     mask-image: none;
   }
 
-  .hero__figure::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(to top, var(--bg) 0%, rgba(246, 241, 234, 0) 26%);
-  }
-
   .hero__figure img {
     object-position: 50% 30%;
   }
