@@ -13,22 +13,57 @@
   }
 
   // Метрика подключается только после «Принять». Вебвизор выключен.
+  var METRIKA_OPT_OUT = 'disableYaCounter' + METRIKA_ID;
   var metrikaLoaded = false;
+  var metrikaScript = null;
+
+  // Удаляем данные, которые успела записать Метрика (только её ключи).
+  function clearMetrikaData() {
+    document.cookie.split(';').forEach(function (c) {
+      var name = c.split('=')[0].trim();
+      if (name.indexOf('_ym') !== 0) return;
+      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=' + location.hostname;
+    });
+    try {
+      Object.keys(localStorage).forEach(function (k) {
+        if (k.indexOf('_ym') === 0) localStorage.removeItem(k);
+      });
+    } catch (e) {}
+  }
+
   function loadMetrika() {
     if (metrikaLoaded || !/^\d+$/.test(METRIKA_ID)) return;
+    // Снимаем блокировку, оставленную предыдущим отзывом согласия.
+    window[METRIKA_OPT_OUT] = false;
+    if (typeof window.ym !== 'function') {
+      window.ym = function () { (window.ym.a = window.ym.a || []).push(arguments); };
+      window.ym.l = 1 * new Date();
+    }
     metrikaLoaded = true;
-    window.ym = window.ym || function () { (window.ym.a = window.ym.a || []).push(arguments); };
-    window.ym.l = 1 * new Date();
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://mc.yandex.ru/metrika/tag.js';
-    document.head.appendChild(s);
+    // tag.js загружается не более одного раза за жизнь страницы.
+    if (!metrikaScript) {
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://mc.yandex.ru/metrika/tag.js';
+      metrikaScript = s;
+      document.head.appendChild(s);
+    }
     window.ym(Number(METRIKA_ID), 'init', {
       clickmap: true,
       trackLinks: true,
       accurateTrackBounce: true,
       webvisor: false
     });
+  }
+
+  // Отзыв согласия: официальный destruct + блокировка повторной инициализации.
+  function stopMetrika() {
+    if (!metrikaLoaded) return;
+    metrikaLoaded = false;
+    window[METRIKA_OPT_OUT] = true;
+    if (typeof window.ym === 'function') window.ym(Number(METRIKA_ID), 'destruct');
+    clearMetrikaData();
   }
 
   var banner = document.getElementById('cookie');
@@ -43,6 +78,7 @@
       setChoice(v);
       banner.hidden = true;
       if (v === 'all') loadMetrika();
+      else stopMetrika();
     });
   }
 
@@ -65,6 +101,7 @@
   var reset = document.querySelector('[data-cookie-reset]');
   if (reset && banner) {
     reset.addEventListener('click', function () {
+      stopMetrika();
       try { localStorage.removeItem(KEY); } catch (e) {}
       banner.hidden = false;
     });

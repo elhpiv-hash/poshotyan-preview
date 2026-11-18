@@ -498,13 +498,13 @@ p + p {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
-  counter-reset: service;
 }
 
 .service {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1.4rem minmax(0, 1fr);
   gap: 1rem;
+  align-items: start;
   padding: 2.25rem 2rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
@@ -513,18 +513,21 @@ p + p {
   font-weight: 800;
   line-height: 1.3;
   letter-spacing: -0.01em;
-  counter-increment: service;
 }
 
-/* Номер — оформление: порядок сообщает сам список */
-.service::before {
-  content: counter(service, decimal-leading-zero);
-  content: counter(service, decimal-leading-zero) / "";
-  font-size: 2rem;
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--label);
+/* Декоративная отметка общая для услуг и принципов */
+.list-check {
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  color: var(--bronze);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.list-check::before {
+  content: "✓";
 }
 
 /* ----- Награды ----- */
@@ -577,38 +580,24 @@ p + p {
   color: var(--fg);
 }
 
-/* ----- Принципы: шаги с номером на линии ----- */
+/* ----- Принципы ----- */
 .steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 3rem 2rem;
-  counter-reset: step;
 }
 
 .step {
-  position: relative;
+  display: grid;
+  grid-template-columns: 1.4rem minmax(0, 1fr);
+  column-gap: 0.75rem;
+  align-items: start;
   padding-top: 1.75rem;
   border-top: 1px solid var(--line);
   font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.3rem);
   font-weight: 700;
   line-height: 1.4;
   letter-spacing: -0.01em;
-  counter-increment: step;
-}
-
-.step::before {
-  content: counter(step, decimal-leading-zero);
-  content: counter(step, decimal-leading-zero) / "";
-  position: absolute;
-  top: -0.85rem;
-  left: 0;
-  padding-right: 0.85rem;
-  background: var(--bg);
-  font-size: 1.15rem;
-  font-weight: 300;
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  color: var(--label);
 }
 
 /* ----- Вопросы и ответы ----- */
@@ -1154,10 +1143,6 @@ p + p {
 
   .service {
     padding: 1.6rem 1.4rem;
-  }
-
-  .service::before {
-    font-size: 1.6rem;
   }
 
   .awards {
